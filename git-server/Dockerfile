@@ -4,6 +4,7 @@ RUN apk add --no-cache openssh git # openrc
 
 RUN addgroup -S git 
 RUN adduser -S git -G git -s /usr/bin/git-shell
+RUN mkdir /repo
 
 RUN X=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13); echo -n "git:$X" | chpasswd 
 
@@ -26,8 +27,9 @@ RUN chmod 0600 /home/git/.ssh/authorized_keys
 
 RUN  chown git:git /home/git/.ssh
 RUN  chown git:git /home/git/.ssh/authorized_keys
+RUN  chown git:git /repo
 
 COPY start.sh /
-COPY target/release/git-mgmt /
+COPY git-web/target/release/git-web /
 
 CMD ["sh", "start.sh"]
