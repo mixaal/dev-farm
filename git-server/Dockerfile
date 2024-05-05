@@ -17,7 +17,7 @@ RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 RUN echo "Subsystem	sftp	/usr/lib/ssh/sftp-server" >> /etc/ssh/sshd_config
 RUN echo "AuthorizedKeysFile   /home/git/.ssh/authorized_keys" >> /etc/ssh/sshd_config
 
-RUN rc-update add sshd
+#RUN rc-update add sshd
 RUN mkdir  /home/git/.ssh
 RUN chmod 0700 /home/git/.ssh
 
@@ -30,6 +30,6 @@ RUN  chown git:git /home/git/.ssh/authorized_keys
 RUN  chown git:git /repo
 
 COPY start.sh /
-COPY git-web/target/release/git-web /
+COPY git-web/target/x86_64-unknown-linux-musl/release/git-web /
 
 CMD ["sh", "start.sh"]
