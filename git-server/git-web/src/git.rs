@@ -4,11 +4,14 @@ use std::{
     process::{Command, ExitStatus},
 };
 
-use crate::rest::{CreateRepoRequest, CreateRepoResponse};
+use crate::{
+    commands,
+    rest::{CreateRepoRequest, CreateRepoResponse},
+};
 
 const REPO_PATH: &str = "/repo";
 const GIT_CMD: &str = "/usr/bin/git";
-const CHOWN_CMD: &str = "/usr/bin/chown";
+
 const GIT_USER: &str = "git";
 const GIT_GROUP: &str = "git";
 
@@ -46,7 +49,7 @@ pub fn create_repo(req: CreateRepoRequest) -> std::io::Result<CreateRepoResponse
 
     tracing::info!(method_name, dir, "configured as bare repository");
 
-    let r = chown_cmd(GIT_USER, GIT_GROUP, &dir)?;
+    let r = commands::chown_cmd(GIT_USER, GIT_GROUP, &dir)?;
     if !r.success() {
         tracing::info!(method_name, dir, "chown failure");
         return Err(std::io::Error::new(
@@ -75,12 +78,4 @@ fn git_init(bare: bool, cwd: &str) -> std::io::Result<ExitStatus> {
     } else {
         Command::new(GIT_CMD).arg("init").current_dir(cwd).status()
     }
-}
-
-fn chown_cmd(user: &str, group: &str, dir: &str) -> std::io::Result<ExitStatus> {
-    Command::new(CHOWN_CMD)
-        .arg("-R")
-        .arg(format!("{}:{}", user, group))
-        .arg(dir)
-        .status()
 }

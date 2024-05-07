@@ -1,5 +1,11 @@
+use std::fs;
+
 use git_web::{
-    git::create_repo, http_utils::{http_response, io_error, parse_error}, rest::{AppError, CreateRepoRequest, CreateRepoResponse, RepoType}
+    commands::mkdir,
+    controller::create_project,
+    git::create_repo,
+    http_utils::{http_response, io_error, parse_error},
+    rest::{AppError, CreateProjectRequest, CreateRepoRequest, CreateRepoResponse, RepoType},
 };
 use salvo::prelude::*;
 
@@ -17,12 +23,28 @@ async fn create_new_repository(req: &mut Request, res: &mut Response) {
             let err = resp.err().unwrap();
             io_error(res, err);
         } else {
-        http_response(
-            res,
-            StatusCode::CREATED,
-            &resp.unwrap()
-        );
+            http_response(res, StatusCode::CREATED, &resp.unwrap());
+        }
     }
+}
+
+#[handler]
+async fn create_new_project(req: &mut Request, res: &mut Response) {
+    let r: Result<CreateProjectRequest, salvo::http::ParseError> =
+        req.parse_json::<CreateProjectRequest>().await;
+    if r.is_err() {
+        let err = r.err().unwrap();
+        parse_error(res, err);
+    } else {
+        let r = r.unwrap();
+
+        let resp = create_project(r);
+        if resp.is_err() {
+            let err = resp.err().unwrap();
+            io_error(res, err);
+        } else {
+            http_response(res, StatusCode::CREATED, &resp.unwrap());
+        }
     }
 }
 
