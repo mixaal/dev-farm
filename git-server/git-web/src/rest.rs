@@ -1,5 +1,3 @@
-use std::error::Error;
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -52,7 +50,14 @@ pub struct CreateUserResponse {
     pub photo: Option<Vec<u8>>,
 }
 
+#[derive(Debug, Deserialize)]
 pub struct AssignUserToProjectRequest {
+    pub nick: String,
+    pub project: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct AssignUserToProjectResponse {
     pub nick: String,
     pub project: String,
 }

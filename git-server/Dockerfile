@@ -29,6 +29,10 @@ RUN  chown git:git /home/git/.ssh
 RUN  chown git:git /home/git/.ssh/authorized_keys
 RUN  chown git:git /repo
 
+RUN mkdir /projects
+RUN mkdir /users
+RUN mkdir /logs
+
 COPY start.sh /
 COPY git-web/target/x86_64-unknown-linux-musl/release/git-web /
 

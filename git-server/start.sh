@@ -7,4 +7,4 @@ set -x
 ls -l /
 ls -l /git*
 
-/git-*
+/git-web &> /logs/app.log

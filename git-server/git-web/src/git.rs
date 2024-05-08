@@ -1,6 +1,6 @@
 use std::{
-    fs::{self, OpenOptions},
-    io::{ErrorKind, Write},
+    fs::{self},
+    io::ErrorKind,
     process::{Command, ExitStatus},
 };
 
@@ -49,7 +49,7 @@ pub fn create_repo(req: CreateRepoRequest) -> std::io::Result<CreateRepoResponse
 
     tracing::info!(method_name, dir, "configured as bare repository");
 
-    let r = commands::chown_cmd(GIT_USER, GIT_GROUP, &dir)?;
+    let r = commands::chown(GIT_USER, GIT_GROUP, &dir)?;
     if !r.success() {
         tracing::info!(method_name, dir, "chown failure");
         return Err(std::io::Error::new(
